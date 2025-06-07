@@ -10,6 +10,6 @@
       ]
     }
   ],
-  "buildCommand": "vite build",
+  "buildCommand": "tsc -b && vite build",
   "outputDirectory": "build"
 }
