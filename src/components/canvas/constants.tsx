@@ -54,8 +54,8 @@ export const baseCurvePoints: Vector3[] = [
 ]
 
 export function useLinenTextures() {
-	const col = useTexture('http://localhost:5173/linen/Plain_Grey_Texture_col.jpg')
-	const normal = useTexture('http://localhost:5173/linen/Plain_Grey_Texture_nrm.jpg')
+	const col = useTexture('https://flowing-canvas.vercel.app/linen/Plain_Grey_Texture_col.jpg')
+	const normal = useTexture('https://flowing-canvas.vercel.app/linen/Plain_Grey_Texture_nrm.jpg')
 
 	for (const t of [col, normal]) {
 		t.wrapS = t.wrapT = THREE.RepeatWrapping
@@ -72,7 +72,7 @@ export function useCarouselImages() {
 		() =>
 			Array(carouselCount)
 				.fill(undefined)
-				.map((_, i) => `http://localhost:5173/images/img${Math.floor(i % carouselCount) + 1}_.webp`),
+				.map((_, i) => `https://flowing-canvas.vercel.app/images/img${Math.floor(i % carouselCount) + 1}_.webp`),
 		[]
 	)
 	const imageTextures = useTexture(imageUrls)
