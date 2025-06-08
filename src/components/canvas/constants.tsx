@@ -1,5 +1,5 @@
 import { useTexture } from '@react-three/drei'
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { Vector3 } from 'three'
 import type { IimageShaderMaterial } from './Experience'
@@ -68,7 +68,29 @@ export function useLinenTextures() {
 
 
 export function useCarouselImages() {
+	const [domReady, setDomReady] = useState(false)
+
+	useEffect(() => {
+		// Wait for DOM to be fully loaded
+		if (document.readyState === 'complete') {
+			setDomReady(true)
+		} else {
+			const handleLoad = () => setDomReady(true)
+			window.addEventListener('load', handleLoad)
+			return () => window.removeEventListener('load', handleLoad)
+		}
+	}, [])
+
+
 	  const imageUrls = useMemo(() => {
+
+		  if (!domReady) {
+			  // Return placeholder URLs while waiting for DOM
+			  return Array(carouselCount)
+				  .fill(undefined)
+				  .map((_, i) => `https://flowing-canvas.vercel.app/images/img${Math.floor(i % carouselCount) + 1}_.webp`)
+		  }
+
 		// Try to get images from Webflow CMS first
 		const webflowImages: string[] = []
 
@@ -114,8 +136,8 @@ export function useCarouselImages() {
 		return Array(carouselCount)
 			.fill(undefined)
 			.map((_, i) => `https://flowing-canvas.vercel.app/images/img${Math.floor(i % carouselCount) + 1}_.webp`)
-	}, [])
-	
+	  }, [domReady])
+
 	const imageTextures = useTexture(imageUrls)
 	const imageShaderRefs = useRef<(IimageShaderMaterial | null)[]>([])
 	useMemo(() => {
