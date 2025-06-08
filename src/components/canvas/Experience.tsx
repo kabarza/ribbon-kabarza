@@ -333,6 +333,15 @@ export default function Experience({ progressRef, timeRef, isMobile }: Experienc
 		if (ribbonMat) {
 			ribbonMat.uTime = timeRef.current
 			ribbonMat.uOffset = progressRef.current
+
+			if (typeof window !== 'undefined') {
+				window.dispatchEvent(new CustomEvent('ribbonProgress', {
+					detail: {
+						progress: progressRef.current,
+						isAtCarousel: progressRef.current >= carouselStartPoint,
+					}
+				}))
+			}
 		}
 		// When ribbon reaches the carousel, add momentum
 		if (!wasAtCarousel.current) {
