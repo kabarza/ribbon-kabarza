@@ -68,13 +68,54 @@ export function useLinenTextures() {
 
 
 export function useCarouselImages() {
-	const imageUrls = useMemo(
-		() =>
-			Array(carouselCount)
-				.fill(undefined)
-				.map((_, i) => `https://flowing-canvas.vercel.app/images/img${Math.floor(i % carouselCount) + 1}_.webp`),
-		[]
-	)
+	  const imageUrls = useMemo(() => {
+		// Try to get images from Webflow CMS first
+		const webflowImages: string[] = []
+
+		for (let i = 1; i <= carouselCount; i++) {
+			const element = document.querySelector(`[data-flow-ribbon-img="${i}"]`)
+			if (element) {
+				// Try to get image URL from different possible sources
+				let imageUrl = ''
+
+				// If it's an img element
+				if (element.tagName === 'IMG') {
+					imageUrl = (element as HTMLImageElement).src
+				}
+				// If it's a div with background image
+				else {
+					const computedStyle = window.getComputedStyle(element)
+					const backgroundImage = computedStyle.backgroundImage
+					if (backgroundImage && backgroundImage !== 'none') {
+						// Extract URL from background-image CSS property
+						const matches = backgroundImage.match(/url\(['"]?([^'")]+)['"]?\)/)
+						if (matches && matches[1]) {
+							imageUrl = matches[1]
+						}
+					}
+				}
+
+				if (imageUrl) {
+					webflowImages.push(imageUrl)
+				}
+			}
+		}
+
+		// If we found Webflow images, use them; otherwise fallback to default URLs
+		if (webflowImages.length > 0) {
+			// Pad the array to carouselCount if needed
+			while (webflowImages.length < carouselCount) {
+				webflowImages.push(...webflowImages.slice(0, carouselCount - webflowImages.length))
+			}
+			return webflowImages.slice(0, carouselCount)
+		}
+
+		// Fallback to original logic
+		return Array(carouselCount)
+			.fill(undefined)
+			.map((_, i) => `https://flowing-canvas.vercel.app/images/img${Math.floor(i % carouselCount) + 1}_.webp`)
+	}, [])
+	
 	const imageTextures = useTexture(imageUrls)
 	const imageShaderRefs = useRef<(IimageShaderMaterial | null)[]>([])
 	useMemo(() => {

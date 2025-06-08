@@ -151,7 +151,7 @@ export const CarouselImage = forwardRef<THREE.Mesh, CarouselImageProps>(
 						// Apply the offset to current position
 						const newLocalPos = carouselRef.current.position.clone().add(localOffset)
 						carouselRef.current.position.lerp(newLocalPos, 0.01 * 3)
-						carouselRef.current.scale.lerp(targetWorldScale, 0.01 * 3)
+						carouselRef.current.scale.lerp(targetWorldScale, 0.01 * 3.5)
 						// Handle animation sequence
 						if (animationState.current === 'damping-up') {
 							easing.damp(m.uniforms.uProgress, 'value', 1, 0.25, 0.01, 0.1,
@@ -179,7 +179,7 @@ export const CarouselImage = forwardRef<THREE.Mesh, CarouselImageProps>(
 				} else {
 					// Return to original position
 					carouselRef.current.position.lerp(originalLocalPosition.current, 0.01 * 3)
-					carouselRef.current.scale.lerp(originalWorldScale, 0.01 * 3)
+					carouselRef.current.scale.lerp(originalWorldScale, 0.01 * 2)
 					if (animationState.current === 'scaledUp') {
 						if (isSelected.current) {
 							// Reset animation when deselected

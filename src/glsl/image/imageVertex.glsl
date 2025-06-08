@@ -54,13 +54,13 @@ void main() {
   vec3 pos = position;
 
 	pos.y += 2.0 *( 0.5 + uv.x) * progress;
-	pos.x += vUv.y * 0.2 * progress;
+	pos.x += vUv.y * 0.3 * progress;
 
   vec4 modelPosition = modelMatrix * vec4(pos , 1.0);
 
   modelPosition.y += sin(pos.y * 0.8 + uTime * 10.0 ) * 1.0 * progress * progress;
 	modelPosition.x += sin(pos.y * 0.3 + uTime * 8.0 ) * 0.7 * progress * progress ;
-	modelPosition.x += -2.0 * progress * progress;
+	// modelPosition.x += -1.0 * progress ;
 
 	float elevation = calculateElevation( modelPosition.xyz);
 

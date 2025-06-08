@@ -1,6 +1,6 @@
 
 import projectState from './Ribbon r3f Project.theatre-project-state.json'
-import { Bvh, Preload } from '@react-three/drei'
+import { Preload } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import { getProject, types } from '@theatre/core'
 import { SheetProvider } from '@theatre/r3f'
@@ -42,6 +42,7 @@ export default function Scene() {
 	// const GPUTier = useDetectGPU()
 		const {width} = useWindowSize()
 		const [isMobile, setIsMobile] = useState(true)
+		const [animationStart, setAnimationStart] = useState(false)
 
 		useEffect(() => {
 			if(!width) return
@@ -110,9 +111,11 @@ export default function Scene() {
 	})
 
 	useEffect(() => {
+		ribbonSheet.sequence.position = 0
 		// Delay the animation by 2.5 seconds
 		const animationTimer = setTimeout(() => {
 			project.ready.then(() => {
+				setAnimationStart(true)
 				ribbonSheet.sequence.position = 0
 				ribbonSheet.sequence
 					.play({
@@ -120,7 +123,7 @@ export default function Scene() {
 
 					})
 			})
-		}, 2500)
+		}, 0)
 
 		// Cleanup function to clear the timeout if component unmounts
 		return () => clearTimeout(animationTimer)
@@ -140,6 +143,7 @@ export default function Scene() {
 					powerPreference: 'high-performance',
 					toneMappingExposure: 2,
 					precision: "highp",
+					depth: false
 				}}
 				onCreated={({ gl }) => {
 					gl.clearDepth()
@@ -163,13 +167,15 @@ export default function Scene() {
 
 				<Suspense fallback={null}>
 					<SheetProvider sheet={ribbonSheet}>
-						<Bvh>
-							<Experience
-								progressRef={progressRef}
-								timeRef={timeRef}
-								isMobile={isMobile}
-							/>
-						</Bvh>
+						{/* <Bvh> */}
+							<group visible={animationStart} dispose={null}>
+								<Experience
+									progressRef={progressRef}
+									timeRef={timeRef}
+									isMobile={isMobile}
+								/>
+							</group>
+						{/* </Bvh> */}
 						{/* <RibbonText 
 								progressRef={progressRef}
 								timeRef={timeRef}
