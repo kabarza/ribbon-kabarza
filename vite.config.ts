@@ -7,7 +7,7 @@ import glsl from 'vite-plugin-glsl'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss(), glsl()],
-    base: 'https://flowing-canvas.vercel.app/',
+    // base: 'https://flowing-canvas.vercel.app/',
   server: {
     host: 'localhost',
     cors: {allowedHeaders: ['*'],},
