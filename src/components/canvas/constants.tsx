@@ -1,5 +1,5 @@
 import { useTexture } from '@react-three/drei'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import {  useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { Vector3 } from 'three'
 import type { IimageShaderMaterial } from './Experience'
@@ -68,75 +68,53 @@ export function useLinenTextures() {
 
 
 export function useCarouselImages() {
-	const [domReady, setDomReady] = useState(false)
-
-	useEffect(() => {
-		// Wait for DOM to be fully loaded
-		if (document.readyState === 'complete') {
-			setDomReady(true)
-		} else {
-			const handleLoad = () => setDomReady(true)
-			window.addEventListener('load', handleLoad)
-			return () => window.removeEventListener('load', handleLoad)
-		}
-	}, [])
-
 
 	  const imageUrls = useMemo(() => {
 
-		  if (!domReady) {
-			  // Return placeholder URLs while waiting for DOM
-			  return Array(carouselCount)
-				  .fill(undefined)
-				  .map((_, i) => `https://flowing-canvas.vercel.app/images/img${Math.floor(i % carouselCount) + 1}_.webp`)
-		  }
-
-		// Try to get images from Webflow CMS first
 		const webflowImages: string[] = []
 
-		for (let i = 1; i <= carouselCount; i++) {
-			const element = document.querySelector(`[data-flow-ribbon-img="${i}"]`)
-			if (element) {
-				// Try to get image URL from different possible sources
-				let imageUrl = ''
+		  for (let i = 1; i <= carouselCount; i++) {
+			  const element = document.querySelector(`[data-flow-ribbon-img="${i}"]`)
+			  if (element) {
+				  let imageUrl = ''
 
-				// If it's an img element
-				if (element.tagName === 'IMG') {
-					imageUrl = (element as HTMLImageElement).src
-				}
-				// If it's a div with background image
-				else {
-					const computedStyle = window.getComputedStyle(element)
-					const backgroundImage = computedStyle.backgroundImage
-					if (backgroundImage && backgroundImage !== 'none') {
-						// Extract URL from background-image CSS property
-						const matches = backgroundImage.match(/url\(['"]?([^'")]+)['"]?\)/)
-						if (matches && matches[1]) {
-							imageUrl = matches[1]
-						}
-					}
-				}
+				//   if (element.tagName === 'IMG') {
+					  const imgElement = element as HTMLImageElement
+					  imageUrl = imgElement.dataset.src || imgElement.src
+				//   } else {
+				// 	  const computedStyle = window.getComputedStyle(element)
+				// 	  const backgroundImage = computedStyle.backgroundImage
+				// 	  if (backgroundImage && backgroundImage !== 'none') {
+				// 		  const matches = backgroundImage.match(/url\(['"]?([^'")]+)['"]?\)/)
+				// 		  if (matches && matches[1]) {
+				// 			  imageUrl = matches[1]
+				// 		  }
+				// 	  }
+				//   }
 
-				if (imageUrl) {
-					webflowImages.push(imageUrl)
-				}
-			}
-		}
+				//   if (imageUrl &&
+				// 	  !imageUrl.includes('placeholder') &&
+				// 	  !imageUrl.includes('data:image') &&
+				// 	  !imageUrl.endsWith('.avif') &&
+				// 	  imageUrl.startsWith('http')) {
+					  webflowImages.push(imageUrl)
+				//   }
+			  }
+		  }
 
 		// If we found Webflow images, use them; otherwise fallback to default URLs
-		if (webflowImages.length > 0) {
-			// Pad the array to carouselCount if needed
-			while (webflowImages.length < carouselCount) {
-				webflowImages.push(...webflowImages.slice(0, carouselCount - webflowImages.length))
-			}
-			return webflowImages.slice(0, carouselCount)
-		}
+		// if (webflowImages.length > 0) {
+		// 	console.log('Using Webflow images:', webflowImages)
+		// 	// Pad the array to carouselCount if needed
+		// 	while (webflowImages.length < carouselCount) {
+		// 		webflowImages.push(...webflowImages.slice(0, carouselCount - webflowImages.length))
+		// 	}
+		// 	return webflowImages.slice(0, carouselCount)
+		// }
+		// // Fallback to original logic
 
-		// Fallback to original logic
-		return Array(carouselCount)
-			.fill(undefined)
-			.map((_, i) => `https://flowing-canvas.vercel.app/images/img${Math.floor(i % carouselCount) + 1}_.webp`)
-	  }, [domReady])
+		  return webflowImages
+	  }, [])
 
 	const imageTextures = useTexture(imageUrls)
 	const imageShaderRefs = useRef<(IimageShaderMaterial | null)[]>([])
