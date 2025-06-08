@@ -4,8 +4,8 @@ import { Preload, useProgress, useTexture } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import { getProject, types } from '@theatre/core'
 import { SheetProvider } from '@theatre/r3f'
-import extension from '@theatre/r3f/dist/extension'
-import studio from '@theatre/studio'
+// import extension from '@theatre/r3f/dist/extension'
+// import studio from '@theatre/studio'
 import { Leva } from 'leva'
 import { Suspense, useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
@@ -15,12 +15,12 @@ import { useIsClient, useWindowSize } from '@uidotdev/usehooks'
 import { useCarouselImages } from './constants'
 
 
-const isProd = false
+const isProd = true
 
 // if (!isProd) {
-studio.initialize()
-studio.extend(extension)
-studio.ui.hide()
+// studio.initialize()
+// studio.extend(extension)
+// studio.ui.hide()
 // }
 
 
