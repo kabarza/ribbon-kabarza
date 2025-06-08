@@ -70,7 +70,7 @@ export default function Scene() {
 
 	useEffect(() => {
 		console.log(total)
-		if (total === 2) {
+		if (total === 14) {
 			const timer = setTimeout(() => {
 				setReadyToStart(true)
 			}, 2000)
