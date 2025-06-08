@@ -53,7 +53,7 @@ export default function Scene() {
 		const {width} = useWindowSize()
 		const [isMobile, setIsMobile] = useState(true)
 		// const [animationStart, setAnimationStart] = useState(false)
-	const { progress } = useProgress()
+	const { total } = useProgress()
 	const [readyToStart, setReadyToStart] = useState(false)
 
 		useEffect(() => {
@@ -69,15 +69,15 @@ export default function Scene() {
 
 
 	useEffect(() => {
-		console.log(progress)
-		if (progress === 100) {
+		console.log(total)
+		if (total === 2) {
 			const timer = setTimeout(() => {
 				setReadyToStart(true)
 			}, 2000)
 
 			return () => clearTimeout(timer)
 		}
-	}, [progress])
+	}, [total])
 	
 
 	const isClient = useIsClient()
@@ -137,23 +137,22 @@ export default function Scene() {
 
 	useEffect(() => {
 		if(readyToStart){
-		ribbonSheet.sequence.position = 0
-		// Delay the animation by 2.5 seconds
-		const animationTimer = setTimeout(() => {
-			project.ready.then(() => {
-				// setAnimationStart(true)
-				ribbonSheet.sequence.position = 0
-				ribbonSheet.sequence
-					.play({
-						range: [0, 6 + 22 / 30],
-
-					})
-			})
-		}, 500)
-		
-		// Cleanup function to clear the timeout if component unmounts
-		return () => clearTimeout(animationTimer)
-	}
+			ribbonSheet.sequence.position = 0
+			// Delay the animation by 2.5 seconds
+			const animationTimer = setTimeout(() => {
+				project.ready.then(() => {
+					// setAnimationStart(true)
+					ribbonSheet.sequence.position = 0
+					ribbonSheet.sequence
+						.play({
+							range: [0, 6 + 22 / 30],
+						})
+				})
+			}, 500)
+			
+			// Cleanup function to clear the timeout if component unmounts
+			return () => clearTimeout(animationTimer)
+		}
 	}, [readyToStart])
 
 
