@@ -180,7 +180,6 @@ export default function Experience({ progressRef, timeRef, isMobile }: Experienc
 
 	const { col, normal} = useLinenTextures()
 	const { imageTextures, imageShaderRefs } = useCarouselImages()
-	console.log(imageTextures)
 	const { momentum, wasAtCarousel } = useMomentum()
 
 	const curve = useMemo(() => new THREE.CatmullRomCurve3(

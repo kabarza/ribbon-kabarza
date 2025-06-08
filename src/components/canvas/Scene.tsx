@@ -1,25 +1,26 @@
 
 import projectState from './Ribbon r3f Project.theatre-project-state.json'
-import { Preload } from '@react-three/drei'
+import { Preload, useProgress, useTexture } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import { getProject, types } from '@theatre/core'
 import { SheetProvider } from '@theatre/r3f'
-// import extension from '@theatre/r3f/dist/extension'
-// import studio from '@theatre/studio'
+import extension from '@theatre/r3f/dist/extension'
+import studio from '@theatre/studio'
 import { Leva } from 'leva'
 import { Suspense, useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import Experience from './Experience'
 // import Interface from './Interface'
 import { useIsClient, useWindowSize } from '@uidotdev/usehooks'
+import { useCarouselImages } from './constants'
 
 
-const isProd = true
+const isProd = false
 
 // if (!isProd) {
-// studio.initialize()
-// studio.extend(extension)
-// studio.ui.hide()
+studio.initialize()
+studio.extend(extension)
+studio.ui.hide()
 // }
 
 
@@ -34,6 +35,15 @@ export const project = getProject(
 
 export const ribbonSheet = project.sheet('Ribbon r3f Sheet')
 
+function PreloadAssets() {
+	const { imageUrls } = useCarouselImages()
+	useTexture([...imageUrls])
+	useTexture('https://flowing-canvas.vercel.app/linen/Plain_Grey_Texture_col.jpg')
+	useTexture('https://flowing-canvas.vercel.app/linen/Plain_Grey_Texture_nrm.jpg')
+
+	return <></>
+}
+
 
 export default function Scene() {
 	// const setIntroCompleted = useAnimationStore((state) => state.setIntroCompleted)
@@ -42,7 +52,9 @@ export default function Scene() {
 	// const GPUTier = useDetectGPU()
 		const {width} = useWindowSize()
 		const [isMobile, setIsMobile] = useState(true)
-		const [animationStart, setAnimationStart] = useState(false)
+		// const [animationStart, setAnimationStart] = useState(false)
+	const { progress } = useProgress()
+	const [readyToStart, setReadyToStart] = useState(false)
 
 		useEffect(() => {
 			if(!width) return
@@ -54,6 +66,20 @@ export default function Scene() {
 			}
 		},[width])
 
+
+
+	useEffect(() => {
+		console.log(progress)
+		if (progress === 100) {
+			const timer = setTimeout(() => {
+				setReadyToStart(true)
+			}, 2000)
+
+			return () => clearTimeout(timer)
+		}
+	}, [progress])
+	
+
 	const isClient = useIsClient()
 
 
@@ -62,7 +88,6 @@ export default function Scene() {
 
 	useEffect(() => {
 		let animationId: number
-
 		const animate = () => {
 			timeRef.current += 0.01
 			animationId = requestAnimationFrame(animate)
@@ -79,7 +104,7 @@ export default function Scene() {
 	
   
 
-	const progress = ribbonSheet?.object('progress',
+	const animationProgress = ribbonSheet?.object('progress',
 		{
 			x: types.number(0,
 				{
@@ -90,7 +115,7 @@ export default function Scene() {
 		},
 		{ reconfigure: true }
 	)
-	progress?.onValuesChange((value) => {
+	animationProgress?.onValuesChange((value) => {
 		progressRef.current = value.x
 	}
 	)
@@ -111,11 +136,12 @@ export default function Scene() {
 	})
 
 	useEffect(() => {
+		if(readyToStart){
 		ribbonSheet.sequence.position = 0
 		// Delay the animation by 2.5 seconds
 		const animationTimer = setTimeout(() => {
 			project.ready.then(() => {
-				setAnimationStart(true)
+				// setAnimationStart(true)
 				ribbonSheet.sequence.position = 0
 				ribbonSheet.sequence
 					.play({
@@ -123,11 +149,12 @@ export default function Scene() {
 
 					})
 			})
-		}, 0)
-
+		}, 500)
+		
 		// Cleanup function to clear the timeout if component unmounts
 		return () => clearTimeout(animationTimer)
-	}, [])
+	}
+	}, [readyToStart])
 
 
 	if (!isClient) return null
@@ -168,13 +195,14 @@ export default function Scene() {
 				<Suspense fallback={null}>
 					<SheetProvider sheet={ribbonSheet}>
 						{/* <Bvh> */}
-							<group visible={animationStart} dispose={null}>
-								<Experience
+							{/* <group visible={animationStart} dispose={null}> */}
+								{readyToStart && <Experience
 									progressRef={progressRef}
 									timeRef={timeRef}
 									isMobile={isMobile}
-								/>
-							</group>
+								/>}
+								<PreloadAssets />
+							{/* </group> */}
 						{/* </Bvh> */}
 						{/* <RibbonText 
 								progressRef={progressRef}
