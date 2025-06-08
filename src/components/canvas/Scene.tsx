@@ -52,7 +52,7 @@ export default function Scene() {
 	// const GPUTier = useDetectGPU()
 		const {width} = useWindowSize()
 		const [isMobile, setIsMobile] = useState(true)
-		// const [animationStart, setAnimationStart] = useState(false)
+		const [animationStart, setAnimationStart] = useState(false)
 	const { total } = useProgress()
 	const [readyToStart, setReadyToStart] = useState(false)
 
@@ -136,12 +136,12 @@ export default function Scene() {
 	})
 
 	useEffect(() => {
+		ribbonSheet.sequence.position = 0
 		if(readyToStart){
-			ribbonSheet.sequence.position = 0
 			// Delay the animation by 2.5 seconds
 			const animationTimer = setTimeout(() => {
 				project.ready.then(() => {
-					// setAnimationStart(true)
+					setAnimationStart(true)
 					ribbonSheet.sequence.position = 0
 					ribbonSheet.sequence
 						.play({
@@ -168,8 +168,7 @@ export default function Scene() {
 					preserveDrawingBuffer: true,
 					powerPreference: 'high-performance',
 					toneMappingExposure: 2,
-					precision: "highp",
-					depth: false
+					precision: "highp"
 				}}
 				onCreated={({ gl }) => {
 					gl.clearDepth()
@@ -194,14 +193,14 @@ export default function Scene() {
 				<Suspense fallback={null}>
 					<SheetProvider sheet={ribbonSheet}>
 						{/* <Bvh> */}
-							{/* <group visible={animationStart} dispose={null}> */}
+							<group visible={animationStart} dispose={null}>
 								{readyToStart && <Experience
 									progressRef={progressRef}
 									timeRef={timeRef}
 									isMobile={isMobile}
 								/>}
 								<PreloadAssets />
-							{/* </group> */}
+							</group>
 						{/* </Bvh> */}
 						{/* <RibbonText 
 								progressRef={progressRef}
