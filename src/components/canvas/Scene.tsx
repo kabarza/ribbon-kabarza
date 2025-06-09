@@ -196,35 +196,11 @@ export default function Scene() {
 						{/* <Bvh> */}
 							<group visible={animationStart} dispose={null}>
 								{readyToStart && 
-									<>
 										<Experience
 											progressRef={progressRef}
 											timeRef={timeRef}
 											isMobile={isMobile}
 										/>
-										<PerformanceMonitor
-											bounds={(refreshrate) => {
-												console.log(refreshrate)
-										return refreshrate > 90 ? [90, 120] : [50, 70]
-											}}
-											onIncline={() => {
-												setDpr(3)
-												console.log('incline')
-											}} 
-											onDecline={() =>{ 
-												setDpr(1)
-												console.log('declined')
-											}} 
-											flipflops={3} 
-											onFallback={(api) =>{ 
-												console.log('api',api)
-												if(dpr === 3 && api.fps < 60 ) setDpr(2)
-												if(dpr === 2 && api.fps < 60 ) setDpr(1)
-												console.log(dpr)
-												console.log('fallback')
-											}} 
-										/>
-									</>
 								}
 								<PreloadAssets />
 							</group>
