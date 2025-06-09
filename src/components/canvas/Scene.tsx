@@ -1,6 +1,6 @@
 
 import projectState from './Ribbon r3f Project.theatre-project-state.json'
-import { PerformanceMonitor, Preload, useProgress, useTexture } from '@react-three/drei'
+import { PerformanceMonitor, Preload, Stats, useProgress, useTexture } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import { getProject, types } from '@theatre/core'
 import { SheetProvider } from '@theatre/r3f'
@@ -59,7 +59,7 @@ export default function Scene() {
 
 		useEffect(() => {
 			if(!width) return
-			console.log('width', width)
+			// console.log('width', width)
 			if (width < 768) {
 				setIsMobile(true)
 			} else {
@@ -70,7 +70,7 @@ export default function Scene() {
 
 
 	useEffect(() => {
-		console.log(total)
+		// console.log(total)
 		if (total === 14) {
 			const timer = setTimeout(() => {
 				setReadyToStart(true)
@@ -189,7 +189,7 @@ export default function Scene() {
 					backgroundColor: 'transparent'
 				}}
 			>
-				{/* <Stats /> */}
+				<Stats />
 
 				<Suspense fallback={null}>
 					<SheetProvider sheet={ribbonSheet}>
@@ -203,11 +203,26 @@ export default function Scene() {
 											isMobile={isMobile}
 										/>
 										<PerformanceMonitor
-											bounds={(refreshrate) => (refreshrate > 90 ? [45, 90] : [50, 60])}
-											onIncline={() => setDpr(2)} 
-											onDecline={() => setDpr(1)} 
+											bounds={(refreshrate) => {
+												console.log(refreshrate)
+										return refreshrate > 90 ? [90, 120] : [50, 70]
+											}}
+											onIncline={() => {
+												setDpr(3)
+												console.log('incline')
+											}} 
+											onDecline={() =>{ 
+												setDpr(1)
+												console.log('declined')
+											}} 
 											flipflops={3} 
-											onFallback={() => setDpr(1)} 
+											onFallback={(api) =>{ 
+												console.log('api',api)
+												if(dpr === 3 && api.fps < 60 ) setDpr(2)
+												if(dpr === 2 && api.fps < 60 ) setDpr(1)
+												console.log(dpr)
+												console.log('fallback')
+											}} 
 										/>
 									</>
 								}
