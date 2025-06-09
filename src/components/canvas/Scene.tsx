@@ -1,6 +1,6 @@
 
 import projectState from './Ribbon r3f Project.theatre-project-state.json'
-import { Preload, useProgress, useTexture } from '@react-three/drei'
+import { PerformanceMonitor, Preload, useProgress, useTexture } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import { getProject, types } from '@theatre/core'
 import { SheetProvider } from '@theatre/r3f'
@@ -55,6 +55,7 @@ export default function Scene() {
 		const [animationStart, setAnimationStart] = useState(false)
 	const { total } = useProgress()
 	const [readyToStart, setReadyToStart] = useState(false)
+	const [dpr, setDpr] = useState(2)
 
 		useEffect(() => {
 			if(!width) return
@@ -175,7 +176,7 @@ export default function Scene() {
 					gl.toneMapping = THREE.NoToneMapping
 					gl.getContext().getExtension('OES_texture_float')
 				}}
-				dpr={2}
+				dpr={dpr}
 				style={{
 					zIndex: 50,
 					position: 'fixed',
@@ -194,11 +195,16 @@ export default function Scene() {
 					<SheetProvider sheet={ribbonSheet}>
 						{/* <Bvh> */}
 							<group visible={animationStart} dispose={null}>
-								{readyToStart && <Experience
-									progressRef={progressRef}
-									timeRef={timeRef}
-									isMobile={isMobile}
-								/>}
+								{readyToStart && 
+									<>
+										<Experience
+											progressRef={progressRef}
+											timeRef={timeRef}
+											isMobile={isMobile}
+										/>
+								<PerformanceMonitor onIncline={() => setDpr(2)} onDecline={() => setDpr(1)} flipflops={3} onFallback={() => setDpr(1)} />
+									</>
+								}
 								<PreloadAssets />
 							</group>
 						{/* </Bvh> */}
