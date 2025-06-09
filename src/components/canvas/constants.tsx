@@ -84,12 +84,12 @@ export function useCarouselImages() {
 
 	  const imageUrls = useMemo(() => {
 		// console.log(domReady)
-		  if (!domReady) {
-			  // Return placeholder URLs while waiting for DOM
-			  return Array(carouselCount)
-				  .fill(undefined)
-				  .map((_, i) => `https://flowing-ribbon.vercel.app/images/img${Math.floor(i % carouselCount) + 1}_.webp`)
-		  }
+		//   if (!domReady) {
+		// 	  // Return placeholder URLs while waiting for DOM
+		// 	  return Array(carouselCount)
+		// 		  .fill(undefined)
+		// 		  .map((_, i) => `https://flowing-ribbon.vercel.app/images/img${Math.floor(i % carouselCount) + 1}_.webp`)
+		//   }
 
 		const webflowImages: string[] = []
 
@@ -108,24 +108,8 @@ export function useCarouselImages() {
 				//   }
 			  }
 		  }
-		  if(webflowImages.length > 0){
 			  return webflowImages
-		  } else {
-			  return Array(carouselCount)
-				  .fill(undefined)
-				  .map((_, i) => `https://flowing-ribbon.vercel.app/images/img${Math.floor(i % carouselCount) + 1}_.webp`)
-		  }
-		// If we found Webflow images, use them; otherwise fallback to default URLs
-		// if (webflowImages.length > 0) {
-		// 	console.log('Using Webflow images:', webflowImages)
-		// 	// Pad the array to carouselCount if needed
-		// 	while (webflowImages.length < carouselCount) {
-		// 		webflowImages.push(...webflowImages.slice(0, carouselCount - webflowImages.length))
-		// 	}
-		// 	return webflowImages.slice(0, carouselCount)
-		// }
-		// // Fallback to original logic
-
+		 
 		  
 	  }, [domReady])
 
