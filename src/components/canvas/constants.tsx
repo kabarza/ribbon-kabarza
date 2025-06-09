@@ -102,6 +102,78 @@ export function useCarouselImages() {
 				//   if (element.tagName === 'IMG') {
 					  const imgElement = element as HTMLImageElement
 					  imageUrl = imgElement.dataset.src || imgElement.src
+			
+					  webflowImages.push(imageUrl)
+					  console.log('imageUrl',webflowImages)
+				//   }
+			  }
+		  }
+		  if(webflowImages.length > 0){
+			  return webflowImages
+		  } else {
+			  return Array(carouselCount)
+				  .fill(undefined)
+				  .map((_, i) => `https://flowing-ribbon.vercel.app/images/img${Math.floor(i % carouselCount) + 1}_.webp`)
+		  }
+		// If we found Webflow images, use them; otherwise fallback to default URLs
+		// if (webflowImages.length > 0) {
+		// 	console.log('Using Webflow images:', webflowImages)
+		// 	// Pad the array to carouselCount if needed
+		// 	while (webflowImages.length < carouselCount) {
+		// 		webflowImages.push(...webflowImages.slice(0, carouselCount - webflowImages.length))
+		// 	}
+		// 	return webflowImages.slice(0, carouselCount)
+		// }
+		// // Fallback to original logic
+
+		  
+	  }, [domReady])
+
+	const imageTextures = useTexture(imageUrls)
+	const imageShaderRefs = useRef<(IimageShaderMaterial | null)[]>([])
+	useMemo(() => {
+		imageShaderRefs.current = Array(carouselCount).fill(null)
+	}, [])
+
+	return { imageUrls, imageTextures, imageShaderRefs }
+}
+
+
+export function useCarouselText() {
+
+	const [domReady, setDomReady] = useState(false)
+
+	useEffect(() => {
+		// Wait for DOM to be fully loaded
+		if (document.readyState === 'complete') {
+			setDomReady(true)
+		} else {
+			const handleLoad = () => setDomReady(true)
+			window.addEventListener('load', handleLoad)
+			return () => window.removeEventListener('load', handleLoad)
+		}
+	}, [])
+
+	  const imageUrls = useMemo(() => {
+		// console.log(domReady)
+		  if (!domReady) {
+			  // Return placeholder URLs while waiting for DOM
+			  return Array(carouselCount)
+				  .fill(undefined)
+				  .map((_, i) => `https://flowing-ribbon.vercel.app/images/img${Math.floor(i % carouselCount) + 1}_.webp`)
+		  }
+
+		const webflowImages: string[] = []
+
+		  for (let i = 1; i <= carouselCount; i++) {
+			  const element = document.querySelector(`[data-flow-ribbon-img="${i}"]`)
+			  console.log('element',element)
+			  if (element) {
+				  let imageUrl = ''
+
+				//   if (element.tagName === 'IMG') {
+					  const imgElement = element as HTMLImageElement
+					  imageUrl = imgElement.dataset.src || imgElement.src
 				//   } else {
 				// 	  const computedStyle = window.getComputedStyle(element)
 				// 	  const backgroundImage = computedStyle.backgroundImage
