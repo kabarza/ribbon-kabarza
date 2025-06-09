@@ -202,7 +202,13 @@ export default function Scene() {
 											timeRef={timeRef}
 											isMobile={isMobile}
 										/>
-								<PerformanceMonitor onIncline={() => setDpr(2)} onDecline={() => setDpr(1)} flipflops={3} onFallback={() => setDpr(1)} />
+										<PerformanceMonitor
+											bounds={(refreshrate) => (refreshrate > 90 ? [45, 90] : [50, 60])}
+											onIncline={() => setDpr(2)} 
+											onDecline={() => setDpr(1)} 
+											flipflops={3} 
+											onFallback={() => setDpr(1)} 
+										/>
 									</>
 								}
 								<PreloadAssets />
