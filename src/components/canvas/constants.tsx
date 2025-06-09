@@ -54,8 +54,8 @@ export const baseCurvePoints: Vector3[] = [
 ]
 
 export function useLinenTextures() {
-	const col = useTexture('https://flowing-canvas.vercel.app/linen/Plain_Grey_Texture_col.jpg')
-	const normal = useTexture('https://flowing-canvas.vercel.app/linen/Plain_Grey_Texture_nrm.jpg')
+	const col = useTexture('https://flowing-ribbon.vercel.app/linen/Plain_Grey_Texture_col.jpg')
+	const normal = useTexture('https://flowing-ribbon.vercel.app/linen/Plain_Grey_Texture_nrm.jpg')
 
 	for (const t of [col, normal]) {
 		t.wrapS = t.wrapT = THREE.RepeatWrapping
@@ -88,7 +88,7 @@ export function useCarouselImages() {
 			  // Return placeholder URLs while waiting for DOM
 			  return Array(carouselCount)
 				  .fill(undefined)
-				  .map((_, i) => `https://flowing-canvas.vercel.app/images/img${Math.floor(i % carouselCount) + 1}_.webp`)
+				  .map((_, i) => `https://flowing-ribbon.vercel.app/images/img${Math.floor(i % carouselCount) + 1}_.webp`)
 		  }
 
 		const webflowImages: string[] = []
@@ -127,7 +127,7 @@ export function useCarouselImages() {
 		  } else {
 			  return Array(carouselCount)
 				  .fill(undefined)
-				  .map((_, i) => `https://flowing-canvas.vercel.app/images/img${Math.floor(i % carouselCount) + 1}_.webp`)
+				  .map((_, i) => `https://flowing-ribbon.vercel.app/images/img${Math.floor(i % carouselCount) + 1}_.webp`)
 		  }
 		// If we found Webflow images, use them; otherwise fallback to default URLs
 		// if (webflowImages.length > 0) {

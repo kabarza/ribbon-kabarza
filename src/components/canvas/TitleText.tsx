@@ -280,7 +280,7 @@ export default function TitleText({ currentImage, isMobile }: TitleTextProps) {
 			<e.group theatreKey="title group" ref={textGroupRef} >
 				<e.group theatreKey="titleText" >
 					<Text ref={textRef}
-						font={isMobile ? "https://flowing-canvas.vercel.app/fonts/Manrope-Bold.ttf" : "https://flowing-canvas.vercel.app/fonts/Manrope-SemiBold.ttf"}
+						font={isMobile ? "https://flowing-ribbon.vercel.app/fonts/Manrope-Bold.ttf" : "https://flowing-ribbon.vercel.app/fonts/Manrope-SemiBold.ttf"}
 						fontSize={isMobile ? 24 : 40}
 						anchorX="center"
 						anchorY="middle"
